@@ -1,0 +1,60 @@
+  console.log("Starting benchmark");
+
+            const suite = new Benchmark.Suite();
+            suite
+                .add("Fibonacci (JS)", function () {
+                    fib_js(20);
+                })
+                .add(
+                    "Fibonacci (WASM)",
+                    function (deferred) {
+                        fib_wasm(BigInt(20)).then(() => deferred.resolve());
+                    },
+                    { defer: true }
+                )
+                // .add("isPrime (JS)", function () {
+                //     is_prime_js(85769041000);
+                // })
+                // .add(
+                //     "isPrime (WASM)",
+                //     function (deferred) {
+                //         is_prime_wasm(BigInt(85769041000)).then(() =>
+                //             deferred.resolve()
+                //         );
+                //     },
+                //     { defer: true }
+                // )
+                .on("cycle", function (event) {
+                    console.log(String(event.target));
+                })
+                .on("complete", function () {
+                    const fastestOption = suite.filter("fastest").map("name");
+                    console.log(`The fastest option is ${fastestOption}`);
+
+                    const results = this.map(({ name, hz }) => ({ name, hz }));
+
+                    const chart = new Chart(document.getElementById("chart"), {
+                        type: "line",
+                        data: {
+                            labels: results.map(({ name }) => name),
+                            datasets: [
+                                {
+                                    label: "Ops/sec",
+                                    data: results.map(({ hz }) => hz),
+                                    fill: false,
+                                    borderColor: "#8ed6ff",
+                                    borderWidth: 1,
+                                },
+                            ],
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                },
+                            },
+                        },
+                    });
+                })
+
+                .run({ async: true });

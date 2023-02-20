@@ -1,0 +1,1 @@
+/home/pl/Code/ba-thesis/rust/target/wasm32-unknown-unknown/release/librust.rlib: /home/pl/Code/ba-thesis/rust/src/lib.rs /home/pl/Code/ba-thesis/rust/src/modules/algorithms.rs /home/pl/Code/ba-thesis/rust/src/modules/crypto.rs /home/pl/Code/ba-thesis/rust/src/modules/image.rs
